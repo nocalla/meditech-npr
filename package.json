@@ -30,10 +30,14 @@
         ]
     },
     "scripts": {
+        "lint": "eslint . && node -e \"JSON.parse(require('fs').readFileSync('syntaxes/meditech-npr.tmLanguage.json','utf8'))\" && node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8'))\"",
         "package": "vsce package"
     },
     "devDependencies": {
-        "@vscode/vsce": "2.15.0"
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "@vscode/vsce": "2.15.0",
+        "eslint": "^9.0.0"
     },
     "overrides": {
         "undici": "5.28.4"
