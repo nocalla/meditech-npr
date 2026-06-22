@@ -4,6 +4,7 @@
     "scopeName": "source.npr",
     "fileTypes": ["npr", "pha", "rw"],
     "patterns": [
+        { "include": "#comment" },
         { "include": "#string" },
         { "include": "#bracket-keyword" },
         { "include": "#control-flow" },
@@ -14,6 +15,10 @@
         { "include": "#punctuation" }
     ],
     "repository": {
+        "comment": {
+            "name": "comment.line.semicolon.npr",
+            "match": "^\\s*;.*$"
+        },
         "string": {
             "name": "string.quoted.double.npr",
             "begin": "\"",

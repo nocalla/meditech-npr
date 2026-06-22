@@ -1,0 +1,67 @@
+; pha_allergy_check.pha — realistic PHA allergy/interaction check rule
+; Demonstrates: bracket declarations, field refs, IF/DO control flow,
+; string literals, operators, positional ops, and at-ref functions.
+; Known gaps (no highlight): \_ concatenation, |0, /local vars, %extern func.
+
+[f rx ok]
+[evaluate at verification]
+[data flds from rx]
+
+; ─── Check for documented drug allergy ───────────────────────────────────────
+; Read the dispensed drug and the patient's allergy list
+@check.drug ^ @rx.drug
+@check.allergy ^ @patient.allergy
+
+; Skip check entirely if no allergy is recorded
+IF{@patient.allergy = ""
+  ; no allergy on file — clear to dispense
+  ; (nothing to highlight inside the branch besides the string)
+  ; gap: |0 would be idiomatic here: @patient.allergy|0
+  DO{@rx.ok ^ "Y"}
+  ; allergy present — run cross-check
+  DO{
+    IF{?(@patient.allergy,@rx.drug) = 0
+      ; drug name found in allergy string — flag and block
+      DO{@rx.ok ^ "N"}
+      DO{@rx.override.msg ^ "ALLERGY: " \_ @rx.drug \_ " on patient allergy list"}
+      ; set severity from allergy record; default to UNKNOWN if absent
+      ; gap: |0 used below — will not highlight
+      DO{@rx.severity ^ @patient.allergy.severity|0}
+      ; clear — drug not in allergy string
+      DO{@rx.ok ^ "Y"}
+    }
+  }
+}
+
+; ─── Check for duplicate therapy ─────────────────────────────────────────────
+IF{@rx.drug.class '= ""
+  IF{?(@patient.active.drugs,@rx.drug.class) '= 0
+    DO{@rx.dup.warn ^ "DUPLICATE THERAPY: " \_ @rx.drug.class}
+    ; gap: %DUPCHK is an external function — won't highlight
+    DO{@rx.dup.severity ^ %DUPCHK(@rx.drug,@patient.active.drugs)}
+  }
+}
+
+; ─── Quantity and days-supply validation ─────────────────────────────────────
+IF{@rx.qty = 0 ! @rx.days.supply = 0
+  DO{@rx.ok ^ "N"}
+  DO{@rx.err.msg ^ "Invalid quantity or days supply"}
+}
+
+; Normalise qty to two decimal places using ZR (gaps: /local var, : format)
+@display.qty ^ @ZR(@rx.qty)
+; gap: format qualifier would be: @rx.dispense.date:D4
+
+; ─── Refill limit check ───────────────────────────────────────────────────────
+IF{@rx.refills > 5 & @rx.drug.schedule '= ""
+  DO{@rx.ok ^ "N"}
+  DO{@rx.err.msg ^ "Refill count exceeds limit for scheduled drug"}
+}
+
+; ─── Build summary message ───────────────────────────────────────────────────
+; gap: \_ concatenation throughout; /msg local var won't highlight
+/msg ^ "Drug: " \_ @rx.drug \_ "  Qty: " \_ @ZR(@rx.qty) \_ "  OK: " \_ @rx.ok
+@rx.check.summary ^ /msg
+
+; Pull first 40 chars of summary for the short display field
+@rx.check.short ^ $(@rx.check.summary,1,40)

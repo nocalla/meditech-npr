@@ -1,0 +1,100 @@
+; keyword.npr — comprehensive grammar showcase for meditech-npr
+; Open in Extension Development Host to smoke-test every token rule.
+; Lines are grouped by grammar rule; gaps (not yet highlighted) are noted.
+
+; ─── STRINGS (string.quoted.double.npr) ─────────────────────────────────────
+@result.msg ^ "Hello, world"
+@order.note ^ "Dispense as written; qty may vary"
+@label.text ^ ""
+
+; ─── BRACKET-KEYWORDS (keyword.other.bracket.npr) ───────────────────────────
+[f rx ok]
+[f field]
+[evaluate at verification]
+[data flds from rx]
+[on save]
+[validate entry]
+
+; ─── CONTROL FLOW (keyword.control.npr) ─────────────────────────────────────
+; IF — keyword highlights, braces highlight as punctuation
+IF{@rx.qty=0;"ZERO";"OK"}
+
+; DO — single-statement wrapper
+DO{@result.status ^ "processed"}
+
+; FOR — init; test; step; body
+FOR{/i ^ 1; /i = 10; /i ^ /i+1; DO{@log.line ^ $(@ result.text,/i,1)}}
+
+; ─── AT-REFS: FUNCTIONS (support.function.npr) ──────────────────────────────
+; Uppercase-initial @Name( → function call
+@L(@order.drug)
+@LENGTH(@rx.sig)
+@U(@patient.name)
+@D(@patient.dob)
+@N(@rx.qty)
+@ZR(@order.amt)
+@ZS(@result.msg)
+
+; ─── AT-REFS: FIELD REFS (variable.other.field.npr) ─────────────────────────
+; Lowercase-initial @name or @name.field → data reference
+@rx.drug
+@rx.qty
+@rx.sig
+@patient.dob
+@patient.allergy
+@order.drug
+@order.amt
+
+; ─── POSITIONAL OPERATORS (keyword.operator.positional.npr) ─────────────────
+; $( #( ?( — the sigil highlights; the paren and args do not (yet)
+$(@patient.name,1,10)
+?(@rx.sig,"PRN")
+#(@order.drug,3)
+
+; ─── OPERATORS (keyword.operator.*.npr) ─────────────────────────────────────
+; ^ assignment / pipe
+@result.val ^ 42
+@order.qty ^ @rx.qty
+
+; & logical AND
+IF{@rx.qty>0 & @rx.refills>0;"VALID";"INVALID"}
+
+; ! logical OR
+IF{@rx.stat="STAT" ! @rx.priority="URGENT";"RUSH";"ROUTINE"}
+
+; '= not-equal
+IF{@patient.allergy '= "";"CHECK ALLERGY";"CLEAR"}
+
+; = equality
+IF{@rx.qty=0;"ZERO QUANTITY";"OK"}
+
+; ─── NUMBERS (constant.numeric.npr) ─────────────────────────────────────────
+@rx.qty ^ 30
+@rx.refills ^ 0
+@days.supply ^ 90
+FOR{/i ^ 1; /i = 100; /i ^ /i+1; DO{@log.n ^ /i}}
+
+; ─── PUNCTUATION (punctuation.*.npr) ────────────────────────────────────────
+; , ; { }
+IF{@rx.qty=0;"NONE";"OK"}
+DO{@result.a ^ 1; @result.b ^ 2}
+@list.item ^ $(@rx.sig,1,5)
+
+; ─── KNOWN GAPS (will NOT highlight — shown for honest coverage) ─────────────
+
+; \_ string concatenation
+@full.name ^ @patient.first \_ " " \_ @patient.last
+
+; |0 default-to-empty
+@display.val ^ @rx.note|0
+
+; : format qualifier
+@report.date ^ @patient.dob:D4
+
+; /varname local variable sigil
+/temp ^ @rx.qty
+/counter ^ 0
+FOR{/i ^ 1; /i = 10; /i ^ /i+1; DO{/temp ^ /temp+1}}
+
+; %funcname external function prefix
+@result.val ^ %RTNFUNC(@rx.drug)
