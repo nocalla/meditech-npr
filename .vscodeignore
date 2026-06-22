@@ -1,0 +1,8 @@
+examples/**
+.vscode/**
+.github/**
+issues/**
+node_modules/**
+.gitignore
+.eslint*
+tsconfig*

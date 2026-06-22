@@ -28,5 +28,11 @@
                 "path": "./syntaxes/meditech-npr.tmLanguage.json"
             }
         ]
+    },
+    "scripts": {
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@vscode/vsce": "^3.0.0"
     }
 }
