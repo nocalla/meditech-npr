@@ -1,0 +1,87 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "MEDITECH NPR",
+    "scopeName": "source.npr",
+    "fileTypes": ["npr", "pha", "rw"],
+    "patterns": [
+        { "include": "#string" },
+        { "include": "#bracket-keyword" },
+        { "include": "#control-flow" },
+        { "include": "#at-ref" },
+        { "include": "#positional-op" },
+        { "include": "#operator" },
+        { "include": "#number" },
+        { "include": "#punctuation" }
+    ],
+    "repository": {
+        "string": {
+            "name": "string.quoted.double.npr",
+            "begin": "\"",
+            "end": "\""
+        },
+        "bracket-keyword": {
+            "name": "keyword.other.bracket.npr",
+            "match": "\\[[a-z]+(?:\\s+[a-z][a-z0-9.]*)*\\]"
+        },
+        "control-flow": {
+            "name": "keyword.control.npr",
+            "match": "\\b(IF|DO|FOR)(?=\\{)"
+        },
+        "at-ref": {
+            "patterns": [
+                {
+                    "name": "support.function.npr",
+                    "match": "@[A-Z][A-Za-z]*(?=\\()"
+                },
+                {
+                    "name": "variable.other.field.npr",
+                    "match": "@[a-z][a-z0-9.]*"
+                }
+            ]
+        },
+        "positional-op": {
+            "name": "keyword.operator.positional.npr",
+            "match": "[$?#](?=\\()"
+        },
+        "operator": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.assignment.npr",
+                    "match": "\\^"
+                },
+                {
+                    "name": "keyword.operator.logical.npr",
+                    "match": "[&!]"
+                },
+                {
+                    "name": "keyword.operator.comparison.npr",
+                    "match": "'=|="
+                }
+            ]
+        },
+        "number": {
+            "name": "constant.numeric.npr",
+            "match": "\\b[0-9]+\\b"
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "name": "punctuation.separator.statement.npr",
+                    "match": ","
+                },
+                {
+                    "name": "punctuation.separator.clause.npr",
+                    "match": ";"
+                },
+                {
+                    "name": "punctuation.section.block.begin.npr",
+                    "match": "\\{"
+                },
+                {
+                    "name": "punctuation.section.block.end.npr",
+                    "match": "\\}"
+                }
+            ]
+        }
+    }
+}

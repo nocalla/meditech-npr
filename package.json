@@ -1,0 +1,26 @@
+{
+    "name": "meditech-npr-syntax",
+    "displayName": "MEDITECH NPR",
+    "description": "Syntax highlighting for MEDITECH NPR/MAGIC code",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "categories": ["Programming Languages"],
+    "contributes": {
+        "languages": [
+            {
+                "id": "npr",
+                "aliases": ["MEDITECH NPR", "NPR"],
+                "extensions": [".npr", ".pha", ".rw"]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "npr",
+                "scopeName": "source.npr",
+                "path": "./syntaxes/meditech-npr.tmLanguage.json"
+            }
+        ]
+    }
+}
