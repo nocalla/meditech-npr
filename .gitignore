@@ -2,6 +2,5 @@ node_modules/
 *.vsix
 dist/
 .vscode/
-CLAUDE.md
 issues/
 examples/
