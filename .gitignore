@@ -1,4 +1,5 @@
 node_modules/
 *.vsix
 dist/
-issues/
+.vscode/
+examples/
