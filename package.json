@@ -1,8 +1,14 @@
 {
-    "name": "meditech-npr-syntax",
+    "name": "meditech-npr",
     "displayName": "MEDITECH NPR",
     "description": "Syntax highlighting for MEDITECH NPR/MAGIC code",
     "version": "0.0.1",
+    "publisher": "nocalla",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nocalla/meditech-npr"
+    },
     "engines": {
         "vscode": "^1.75.0"
     },
