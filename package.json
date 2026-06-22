@@ -33,6 +33,9 @@
         "package": "vsce package"
     },
     "devDependencies": {
-        "@vscode/vsce": "^3.0.0"
+        "@vscode/vsce": "2.15.0"
+    },
+    "overrides": {
+        "undici": "5.28.4"
     }
 }
